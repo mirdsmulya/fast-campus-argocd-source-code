@@ -96,7 +96,7 @@ jobs:
       - name: Commit changes and push to GitHub
         run: |
           git add -A
-          git commit -m "Automatically promoting new image version $TAGS_VERSION" --author "GitHub Action <devops@fastcampus.com>"
+          git commit -m "Automatically promoting new image version $TAGS_VERSION" --author "GitHub Actions <devops@fastcampus.com>"
           git push
 
       - name: Display updated YAML
