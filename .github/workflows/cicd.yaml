@@ -78,7 +78,7 @@ jobs:
           token: ${{ secrets.REPO_TOKEN }}
 
       - name: Set remote URL for GitHub
-        run: git remote set-url origin https://${{ secrets.REPO_TOKEN }}@github.com/$WORKSPACE/$DEPLOYMENT_REPO
+        run: git remote set-url origin https://${{ secrets.REPO_TOKEN }}@github.com/$WORKSPACE/$GITOPS_REPO
 
       - name: Install dependencies
         run: | 
@@ -97,7 +97,6 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "devops@fastcampus.com"
-          git remote set-url origin https://${{ secrets.REPO_TOKEN }}@github.com/$WORKSPACE/$DEPLOYMENT_REPO
           git add -A
           git commit -m "Automatically promoting new image version $TAGS_VERSION"
           git push
