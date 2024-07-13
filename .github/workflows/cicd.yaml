@@ -96,7 +96,7 @@ jobs:
           cd $HELM_CHART_PATH
           yq eval -j values.yaml > values.json
           jq --arg tag "$TAGS_VERSION" '(.image.tag) |= $tag' values.json > tmp.json
-          yq eval -P tmp.json -o=y > values.yaml
+          yq eval -P tmp.json -oy > values.yaml
           rm values.json tmp.json
 
       - name: Commit changes
