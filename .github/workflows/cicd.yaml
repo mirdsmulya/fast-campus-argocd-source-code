@@ -77,9 +77,6 @@ jobs:
           repository: ${{ env.WORKSPACE }}/${{ env.GITOPS_REPO }}
           token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Change directory to Helm path
-        run: cd $DEPLOYMENT_REPO/$HELM_PATH
-
       - name: Set remote URL for GitHub
         run: git remote set-url origin https://${{ secrets.REPO_TOKEN }}@github.com/$WORKSPACE/$DEPLOYMENT_REPO
 
@@ -90,22 +87,17 @@ jobs:
         run: sudo wget https://github.com/mikefarah/yq/releases/download/v4.6.1/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
       - name: list files
-        run: ls -la
+        run: |
+          ls -la
+          pwd
 
-      - name: pwd
-        run: pwd
-
-      - name: Convert YAML to JSON
-        run: yq eval -j values.yaml > values.json
-
-      - name: Update image tag in JSON
-        run: jq --arg tag "$TAGS_VERSION" '(.image.tag) |= $tag' values.json > tmp.json
-
-      - name: Convert JSON back to YAML
-        run: yq eval -P tmp.json -o=y > values.yaml
-
-      - name: Clean up temporary files
-        run: rm values.json tmp.json
+      - name: Update image tag in values.yaml
+        run: | 
+          cd $HELM_PATH
+          yq eval -j values.yaml > values.json
+          jq --arg tag "$TAGS_VERSION" '(.image.tag) |= $tag' values.json > tmp.json
+          yq eval -P tmp.json -o=y > values.yaml
+          rm values.json tmp.json
 
       - name: Commit changes
         run: |
