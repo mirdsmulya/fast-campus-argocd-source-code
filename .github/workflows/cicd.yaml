@@ -81,15 +81,9 @@ jobs:
         run: git remote set-url origin https://${{ secrets.REPO_TOKEN }}@github.com/$WORKSPACE/$DEPLOYMENT_REPO
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Install yq
-        run: sudo wget https://github.com/mikefarah/yq/releases/download/v4.6.1/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
-
-      - name: list files
-        run: |
-          ls -la
-          pwd
+        run: | 
+          sudo apt-get update && sudo apt-get install -y jq
+          sudo wget https://github.com/mikefarah/yq/releases/download/v4.6.1/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
 
       - name: Update image tag in values.yaml
         run: | 
@@ -99,13 +93,11 @@ jobs:
           yq eval -P tmp.json -oy > values.yaml
           rm values.json tmp.json
 
-      - name: Commit changes
+      - name: Commit changes and push to GitHub
         run: |
           git add -A
           git commit -m "Automatically promoting new image version $TAGS_VERSION" --author "GitHub Actions Trigger by Tag <"
-
-      - name: Push changes to GitHub
-        run: git push
+          git push
 
       - name: Display updated YAML
         run: cat values.yaml
