@@ -95,8 +95,10 @@ jobs:
 
       - name: Commit changes and push to GitHub
         run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "devops@fastcampus.com"
           git add -A
-          git commit -m "Automatically promoting new image version $TAGS_VERSION" --author "GitHub Actions <devops@fastcampus.com>"
+          git commit -m "Automatically promoting new image version $TAGS_VERSION"
           git push
 
       - name: Display updated YAML
